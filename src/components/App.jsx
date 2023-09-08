@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import Searchbar from './Searchbar';
+import React, { Component } from 'react';
+import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery';
 import Loader from './Loader';
 import LoadMoreBtn from './LoadMoreBtn';
@@ -7,80 +7,104 @@ import getImages from './services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const App = () => {
-  const [serchReqest, setSerchReqest] = useState('');
-  const [status, setStatus] = useState('idle');
-  const [imagesList, setImagesList] = useState([]);
-  const [page, setPage] = useState(1);
-  const [error, setError] = useState(null);
-  const [totalHits, setTotalHits] = useState(null);
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      serchReqest: '',
+      status: 'idle',
+      imagesList: [],
+      page: 1,
+      error: null,
+      totalHits: null,
+    };
+  }
 
-  useEffect(() => {
+  componentDidMount() {
+    this.fetchImages();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.serchReqest !== this.state.serchReqest ||
+      prevState.page !== this.state.page
+    ) {
+      this.fetchImages();
+    }
+  }
+
+  fetchImages = () => {
+    const { serchReqest, page } = this.state;
     if (!serchReqest) {
       return;
     }
-    setStatus('pending');
+    this.setState({ status: 'pending' });
     getImages(serchReqest, page)
-      .then(images => {
+      .then((images) => {
         if (images.hits.length === 0) {
-          setStatus('empty');
+          this.setState({ status: 'empty' });
           return;
         }
-        setImagesList(prevImages => [...prevImages, ...images.hits]);
-        setStatus('completed');
-        setTotalHits(images.totalHits);
+        this.setState((prevState) => ({
+          imagesList: [...prevState.imagesList, ...images.hits],
+          status: 'completed',
+          totalHits: images.totalHits,
+        }));
       })
-      .catch(error => {
-        setError(error);
-        setStatus('rejected');
+      .catch((error) => {
+        this.setState({ error, status: 'rejected' });
         console.log('у вас Ошибка => ', error);
       });
-  }, [serchReqest, page]);
+  };
 
-  const onSubmit = req => {
-    if (req === serchReqest) {
+  onSubmit = (req) => {
+    if (req === this.state.serchReqest) {
       return toast.error('Enter new request ^_^');
     }
-    setSerchReqest(req);
-    setPage(1);
-    setImagesList([]);
+    this.setState({ serchReqest: req, page: 1, imagesList: [] });
   };
 
-  const loadMoreBtnHandler = () => {
-    setPage(prState => prState + 1);
+  loadMoreBtnHandler = () => {
+    this.setState((prevState) => ({ page: prevState.page + 1 }));
   };
 
-  if (totalHits === imagesList.length) {
-    toast.error('Sorry, there are no more photos :(');
-  }
-  if (status === 'error') {
-    toast.error(`${error}`);
-  }
+  render() {
+    const { serchReqest, status, imagesList, totalHits, error } = this.state;
 
-  return (
-    <div className="app">
-      <Searchbar onSubmit={onSubmit} />
-      {status === 'idle' && (
-        <h1 className="temporaty-heading">Enter your request ⬆️</h1>
-      )}
+    if (totalHits === imagesList.length) {
+      toast.error('Sorry, there are no more photos :(');
+    }
+    if (status === 'error') {
+      toast.error(`${error}`);
+    }
 
-      {status === 'empty' && (
-        <h1 className="temporaty-heading">
-          No results by request "{serchReqest}" 😢
-        </h1>
-      )}
-
-      <ImageGallery images={imagesList} />
-
-      {status === 'pending' && <Loader />}
-
-      {imagesList.length !== 0 &&
-        totalHits !== imagesList.length &&
-        status !== 'pending' && (
-          <LoadMoreBtn onClickHandler={loadMoreBtnHandler} />
+    return (
+      <div className="app">
+        <Searchbar onSubmit={this.onSubmit} />
+        {status === 'idle' && (
+          <h1 className="temporaty-heading">Enter your request ⬆️</h1>
         )}
 
-      <ToastContainer theme="colored" />
-    </div>
-  );
-};
+        {status === 'empty' && (
+          <h1 className="temporaty-heading">
+            No results by request "{serchReqest}" 😢
+          </h1>
+        )}
+
+        <ImageGallery images={imagesList} />
+
+        {status === 'pending' && <Loader />}
+
+        {imagesList.length !== 0 &&
+          totalHits !== imagesList.length &&
+          status !== 'pending' && (
+            <LoadMoreBtn onClickHandler={this.loadMoreBtnHandler} />
+          )}
+
+        <ToastContainer theme="colored" />
+      </div>
+    );
+  }
+}
+
+export default App;

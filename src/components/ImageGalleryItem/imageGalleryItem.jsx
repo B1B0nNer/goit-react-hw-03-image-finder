@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from '../Modal';
 import './imageGalleryItem.css';
 
-const ImageGalleryItem = ({ src, largeImage }) => {
-  const [modal, setModal] = useState(false);
+class ImageGalleryItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modal: false,
+    };
+  }
 
-  const toggleModalHandler = () => {
-    setModal(!modal);
+  toggleModalHandler = () => {
+    this.setState((prevState) => ({ modal: !prevState.modal }));
   };
-  return (
-    <>
-      <li className="imageGalleryItem" onClick={toggleModalHandler}>
-        <img src={src} alt="" className="imageGalleryItem-image" />
-      </li>
-      {modal && <Modal image={largeImage} closeModal={toggleModalHandler} />}
-    </>
-  );
-};
+
+  render() {
+    const { src, largeImage } = this.props;
+    const { modal } = this.state;
+
+    return (
+      <>
+        <li className="imageGalleryItem" onClick={this.toggleModalHandler}>
+          <img src={src} alt="" className="imageGalleryItem-image" />
+        </li>
+        {modal && <Modal image={largeImage} closeModal={this.toggleModalHandler} />}
+      </>
+    );
+  }
+}
 
 ImageGalleryItem.propTypes = {
   src: PropTypes.string.isRequired,

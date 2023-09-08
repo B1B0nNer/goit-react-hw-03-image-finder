@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ImageGalleryItem from '../ImageGalleryItem';
+import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import './imageGallery.css';
 
 const ImageGallery = ({ images }) => {
