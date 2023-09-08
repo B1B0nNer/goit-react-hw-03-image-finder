@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Searchbar from './Searchbar';
-import ImageGallery from './ImageGallery';
-import Loader from './Loader';
-import LoadMoreBtn from './LoadMoreBtn';
+import Searchbar from './Searchbar/index.js';
+import ImageGallery from './ImageGallery/index.js';
+import Loader from './Loader/index.js';
+import LoadMoreBtn from './LoadMoreBtn/index.js';
 import getImages from './services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

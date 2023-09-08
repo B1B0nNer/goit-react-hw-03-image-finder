@@ -1,1 +1,1 @@
-export { default } from './LoadMoreBtn';
+export { default } from './LoadMoreBtn.jsx';
