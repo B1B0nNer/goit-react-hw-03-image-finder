@@ -8,17 +8,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      serchReqest: '',
-      status: 'idle',
-      imagesList: [],
-      page: 1,
-      error: null,
-      totalHits: null,
-    };
-  }
+  state = {
+    serchReqest: '',
+    status: 'idle',
+    imagesList: [],
+    page: 1,
+    error: null,
+    totalHits: null,
+  };
 
   componentDidMount() {
     this.fetchImages();

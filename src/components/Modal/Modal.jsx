@@ -3,11 +3,6 @@ import PropTypes from 'prop-types';
 import './modal.css';
 
 class Modal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   componentDidMount() {
     window.addEventListener('keydown', this.closeModalHandler);
     document.body.style.overflow = 'hidden';

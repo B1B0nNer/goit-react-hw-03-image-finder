@@ -4,12 +4,9 @@ import Modal from '../Modal';
 import './imageGalleryItem.css';
 
 class ImageGalleryItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modal: false,
-    };
-  }
+  state = {
+    modal: false,
+  };
 
   toggleModalHandler = () => {
     this.setState((prevState) => ({ modal: !prevState.modal }));
