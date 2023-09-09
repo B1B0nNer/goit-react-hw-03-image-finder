@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Searchbar from './SearchBar';
+import SearchBar from './SearchBar';
 import ImageGallery from './ImageGallery';
 import Loader from './Loader';
 import LoadMoreBtn from './LoadMoreBtn';
@@ -80,7 +80,7 @@ class App extends Component {
 
     return (
       <div className="app">
-        <Searchbar onSubmit={this.onSubmit} />
+        <SearchBar onSubmit={this.onSubmit} />
         {status === 'idle' && (
           <h1 className="temporaty-heading">Enter your request ⬆️</h1>
         )}
